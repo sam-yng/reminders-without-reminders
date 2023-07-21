@@ -1,11 +1,13 @@
 import React from "react";
 import classNames from "classnames";
-import add from "../assets/images/more.png";
+import add from "../assets/icons/more.png";
 import { useFormik } from "formik";
-import { addTask } from "../redux/taskSlice";
+import { addTask, removeTask, flagTask } from "../redux/taskSlice";
 import { useReminders } from "../utils/useReminders";
 import { FormikErrors } from "../utils/useReminders";
 import { useParams } from "react-router-dom";
+import flag from "../assets/icons/image.png";
+import check from "../assets/icons/checkmark.png";
 
 export const ListView: React.FC = () => {
   const { dispatch, taskData, listData } = useReminders();
@@ -14,6 +16,14 @@ export const ListView: React.FC = () => {
 
   const handleTaskAdd = () => {
     dispatch(addTask({ name: formik.values.taskInput, listId: id }));
+  };
+
+  const handleTaskRemove = (id: string) => {
+    dispatch(removeTask({ id: id }));
+  };
+
+  const handleTaskFlag = (id: string, flagged: boolean) => {
+    dispatch(flagTask({ id, flagged: !flagged }));
   };
 
   const formik = useFormik({
@@ -68,15 +78,44 @@ export const ListView: React.FC = () => {
           "mt-6",
           "ml-8",
           "list-disc",
-          "tracking-wider",
-          "space-y-2",
+          "tracking-wide",
+          "space-y-3",
         )}
       >
         {taskData
           .filter((item) => item.listId === id)
           .map((item) => (
-            <div key={item.id}>
-              <li>{item.name}</li>
+            <div
+              className={classNames(
+                "flex",
+                "flex-row",
+                "items-center",
+                "justify-between",
+                "w-11/12",
+              )}
+              key={item.id}
+            >
+              <li
+                onClick={() => handleTaskRemove(item.id)}
+                className={classNames(
+                  "hover:line-through",
+                  "hover:cursor-pointer",
+                )}
+              >
+                {item.name}
+              </li>
+              <button onClick={() => handleTaskFlag(item.id, item.flagged)}>
+                <img
+                  className={classNames(
+                    "h-8",
+                    "bg-altwhite",
+                    "bg-opacity-10",
+                    "p-2",
+                    "rounded-xl",
+                  )}
+                  src={item.flagged ? check : flag}
+                />
+              </button>
             </div>
           ))}
       </ul>

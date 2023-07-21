@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { addList, removeList } from "../redux/listSlice";
-import add from "../assets/images/more.png";
+import add from "../assets/icons/more.png";
 import { useReminders } from "../utils/useReminders";
 import { FormikErrors } from "../utils/useReminders";
 
@@ -21,6 +21,7 @@ export const ListNav: React.FC = () => {
 
   const handleListRemove = (id: string) => {
     dispatch(removeList({ id: id }));
+    navigate("/");
   };
 
   const formik = useFormik({
@@ -43,13 +44,13 @@ export const ListNav: React.FC = () => {
     <main
       className={classNames(
         "border-r-2",
-        "border-white",
+        "border-altwhite",
         "min-w-[25vw]",
         "h-screen",
       )}
     >
       <nav className={classNames("py-6", "px-5")}>
-        <h1 className={classNames("text-xl", "font-semibold")}>
+        <h1 className={classNames("text-xl", "font-semibold", "text-neon")}>
           REMINDERS WITHOUT<br></br>REMINDERS
         </h1>
         <form
@@ -90,6 +91,7 @@ export const ListNav: React.FC = () => {
                 "items-center",
                 "mb-2",
                 "justify-between",
+                "text-altwhite",
               )}
             >
               <Link to={`${item.id}`} reloadDocument={false}>

@@ -12,7 +12,8 @@ export default {
       "gray": "#817D92",
       "offgray": "#24232C",
       "altwhite": "#E6E5EA",
-      "green": "#A4FFAF"
+      "green": "#A4FFAF",
+      "neon": "#39FF14"
     },
     extend: {},
   },
