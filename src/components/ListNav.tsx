@@ -1,19 +1,20 @@
 import React, { useEffect } from "react";
 import classNames from "classnames";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/listSlice";
+import { ListState, List } from "../redux/listSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { addList } from "../redux/listSlice";
+import { addList, removeList } from "../redux/listSlice";
 import { useDispatch } from "react-redux";
 import add from "../assets/images/more.png";
 
-type FormikErrors = {
+export type FormikErrors = {
   listInput?: string;
+  taskInput?: string;
 };
 
 export const ListNav: React.FC = () => {
-  const listData = useSelector((state: RootState) => state.lists);
+  const listData = useSelector((state: ListState) => state.lists);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -23,6 +24,10 @@ export const ListNav: React.FC = () => {
 
   const handleListAdd = () => {
     dispatch(addList({ name: formik.values.listInput }));
+  };
+
+  const handleListRemove = (id: string) => {
+    dispatch(removeList({ id: id }));
   };
 
   const formik = useFormik({
@@ -48,20 +53,20 @@ export const ListNav: React.FC = () => {
       className={classNames(
         "border-r-2",
         "border-white",
-        "max-w-[25vw]",
+        "min-w-[25vw]",
         "h-screen",
       )}
     >
       <nav className={classNames("py-6", "px-5")}>
         <h1 className={classNames("text-xl", "font-semibold")}>
-          REMINDERS WITHOUT REMINDERS
+          REMINDERS WITHOUT<br></br>REMINDERS
         </h1>
         <form
           onSubmit={(e) => {
             e.preventDefault();
             formik.handleSubmit(e);
           }}
-          className={classNames("flex", "flex-row", "items-center", "mt-4")}
+          className={classNames("flex", "flex-row", "items-center", "mt-6")}
         >
           <input
             name="listInput"
@@ -86,11 +91,26 @@ export const ListNav: React.FC = () => {
         <h1 className={classNames("text-gray", "text-lg", "mt-4")}>My Lists</h1>
         <ul className={classNames("ml-2", "mt-2", "text-lg", "tracking-wider")}>
           {listData.map((item) => (
-            <Link key={item.id} to={`${item.id}`} reloadDocument={false}>
-              <li className={classNames("mb-2")} key={item.id}>
-                {item.name}
-              </li>
-            </Link>
+            <div
+              key={item.id}
+              className={classNames(
+                "flex",
+                "flex-row",
+                "items-center",
+                "mb-2",
+                "justify-between",
+              )}
+            >
+              <Link to={`${item.id}`} reloadDocument={false}>
+                <li key={item.id}>{item.name}</li>
+              </Link>
+              <button
+                onClick={() => handleListRemove(item.id)}
+                className={classNames("border", "border-altwhite", "mr-2")}
+              >
+                <img src={add} className={classNames("rotate-45", "h-4")} />
+              </button>
+            </div>
           ))}
         </ul>
       </nav>
