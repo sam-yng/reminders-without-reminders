@@ -1,21 +1,14 @@
 import React, { useEffect } from "react";
 import classNames from "classnames";
-import { useSelector } from "react-redux";
-import { ListState, List } from "../redux/listSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { addList, removeList } from "../redux/listSlice";
-import { useDispatch } from "react-redux";
 import add from "../assets/images/more.png";
-
-export type FormikErrors = {
-  listInput?: string;
-  taskInput?: string;
-};
+import { useReminders } from "../utils/useReminders";
+import { FormikErrors } from "../utils/useReminders";
 
 export const ListNav: React.FC = () => {
-  const listData = useSelector((state: ListState) => state.lists);
-  const dispatch = useDispatch();
+  const { dispatch, listData } = useReminders();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,10 +33,8 @@ export const ListNav: React.FC = () => {
         ? (errors.listInput = "List must have a name")
         : null;
     },
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: () => {
       handleListAdd();
-      console.log(listData);
       formik.values.listInput = "";
     },
   });

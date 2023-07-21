@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import classNames from "classnames";
 import { ListNav } from "./components/ListNav";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ListView } from "./components/ListView";
 
 export const App: React.FC = () => {
+  // useEffect(() => {
+  //   const listStorage = localStorage.getItem("LISTS")
+  //   if (listStorage !== null)
+  // })
+
   return (
     <Router>
       <main

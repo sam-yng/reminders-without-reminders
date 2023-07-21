@@ -1,19 +1,16 @@
 import React from "react";
 import classNames from "classnames";
-import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { ListState } from "../redux/listSlice";
 import add from "../assets/images/more.png";
 import { useFormik } from "formik";
-import { FormikErrors } from "./ListNav";
-import { TaskState, addTask } from "../redux/taskSlice";
+import { addTask } from "../redux/taskSlice";
+import { useReminders } from "../utils/useReminders";
+import { FormikErrors } from "../utils/useReminders";
+import { useParams } from "react-router-dom";
 
 export const ListView: React.FC = () => {
+  const { dispatch, taskData, listData } = useReminders();
   const { id } = useParams();
-  const listData = useSelector((state: ListState) => state.lists);
-  const taskData = useSelector((state: TaskState) => state.tasks);
   const ListItem = listData.find((item) => item.id === id);
-  const dispatch = useDispatch();
 
   const handleTaskAdd = () => {
     dispatch(addTask({ name: formik.values.taskInput, listId: id }));
@@ -29,17 +26,16 @@ export const ListView: React.FC = () => {
         ? (errors.taskInput = "Task must have a name")
         : null;
     },
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: () => {
       handleTaskAdd();
-      console.log(taskData);
       formik.values.taskInput = "";
+      console.log(ListItem);
     },
   });
 
   return (
-    <main className={classNames("w-1/2")}>
-      <h1 className={classNames("text-4xl", "text-altwhite", "ml-16", "mt-8")}>
+    <main className={classNames("w-1/2", "ml-16")}>
+      <h1 className={classNames("text-4xl", "text-altwhite", "mt-8")}>
         {ListItem?.name}
       </h1>
       <form
@@ -47,6 +43,7 @@ export const ListView: React.FC = () => {
         className={classNames("flex", "flex-row", "items-center", "mt-8")}
       >
         <input
+          autoFocus
           name="taskInput"
           placeholder="Add Task"
           value={formik.values.taskInput}
@@ -57,7 +54,6 @@ export const ListView: React.FC = () => {
             "border-gray",
             "rounded-lg",
             "w-full",
-            "ml-16",
             "py-2",
             "px-3",
           )}
@@ -66,6 +62,24 @@ export const ListView: React.FC = () => {
           <img className="h-10 ml-2" src={add} />
         </button>
       </form>
+      <ul
+        className={classNames(
+          "text-2xl",
+          "mt-6",
+          "ml-8",
+          "list-disc",
+          "tracking-wider",
+          "space-y-2",
+        )}
+      >
+        {taskData
+          .filter((item) => item.listId === id)
+          .map((item) => (
+            <div key={item.id}>
+              <li>{item.name}</li>
+            </div>
+          ))}
+      </ul>
     </main>
   );
 };
