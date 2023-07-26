@@ -2,12 +2,11 @@ import React from "react";
 import classNames from "classnames";
 import add from "../assets/icons/more.png";
 import { useFormik } from "formik";
-import { addTask, removeTask, flagTask } from "../redux/taskSlice";
+import { addTask } from "../redux/taskSlice";
 import { useReminders } from "../utils/useReminders";
 import { FormikErrors } from "../utils/useReminders";
 import { useParams } from "react-router-dom";
-import flag from "../assets/icons/image.png";
-import check from "../assets/icons/checkmark.png";
+import { TaskItem } from "./TaskItem";
 
 export const ListView: React.FC = () => {
   const { dispatch, taskData, listData } = useReminders();
@@ -16,14 +15,6 @@ export const ListView: React.FC = () => {
 
   const handleTaskAdd = () => {
     dispatch(addTask({ name: formik.values.taskInput, listId: listId }));
-  };
-
-  const handleTaskRemove = (id: string) => {
-    dispatch(removeTask({ id: id }));
-  };
-
-  const handleTaskFlag = (id: string, flagged: boolean) => {
-    dispatch(flagTask({ id, flagged: !flagged }));
   };
 
   const formik = useFormik({
@@ -37,16 +28,16 @@ export const ListView: React.FC = () => {
         : null;
     },
     onSubmit: () => {
-      handleTaskAdd();
-      formik.values.taskInput = "";
+      if (formik.values.taskInput.length > 0) {
+        handleTaskAdd();
+        formik.values.taskInput = "";
+      }
     },
   });
 
   return (
     <main className={classNames("w-1/2", "ml-16")}>
-      <h1 className={classNames("text-4xl", "text-altwhite", "mt-8")}>
-        {ListItem?.name}
-      </h1>
+      <h1 className={classNames("text-4xl", "mt-8")}>{ListItem?.name}</h1>
       <form
         onSubmit={formik.handleSubmit}
         className={classNames("flex", "flex-row", "items-center", "mt-8")}
@@ -58,9 +49,7 @@ export const ListView: React.FC = () => {
           value={formik.values.taskInput}
           onChange={formik.handleChange}
           className={classNames(
-            "bg-offblack",
             "border",
-            "border-gray",
             "rounded-lg",
             "w-full",
             "py-2",
@@ -84,38 +73,13 @@ export const ListView: React.FC = () => {
         {taskData
           .filter((item) => item.listId === listId)
           .map((item) => (
-            <div
-              className={classNames(
-                "flex",
-                "flex-row",
-                "items-center",
-                "justify-between",
-                "w-11/12",
-              )}
+            <TaskItem
+              filtered={false}
               key={item.id}
-            >
-              <li
-                onClick={() => handleTaskRemove(item.id)}
-                className={classNames(
-                  "hover:line-through",
-                  "hover:cursor-pointer",
-                )}
-              >
-                {item.name}
-              </li>
-              <button onClick={() => handleTaskFlag(item.id, item.flagged)}>
-                <img
-                  className={classNames(
-                    "h-8",
-                    "bg-altwhite",
-                    "bg-opacity-10",
-                    "p-2",
-                    "rounded-xl",
-                  )}
-                  src={item.flagged ? check : flag}
-                />
-              </button>
-            </div>
+              id={item.id}
+              flagged={item.flagged}
+              name={item.name}
+            />
           ))}
       </ul>
     </main>

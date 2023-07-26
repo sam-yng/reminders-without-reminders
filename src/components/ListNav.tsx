@@ -51,7 +51,7 @@ export const ListNav: React.FC = () => {
       )}
     >
       <nav className={classNames("py-6", "px-5")}>
-        <h1 className={classNames("text-xl", "font-semibold", "text-neon")}>
+        <h1 className={classNames("text-xl", "font-semibold")}>
           REMINDERS WITHOUT<br></br>REMINDERS
         </h1>
         <div className={classNames("grid", "grid-cols-2", "mt-4")}>
@@ -73,9 +73,7 @@ export const ListNav: React.FC = () => {
             onChange={formik.handleChange}
             placeholder="Add List"
             className={classNames(
-              "bg-offblack",
               "border",
-              "border-gray",
               "rounded-lg",
               "w-full",
               "py-2",
@@ -87,8 +85,8 @@ export const ListNav: React.FC = () => {
             <img className="h-10" src={add} />
           </button>
         </form>
-        <h1 className={classNames("text-gray", "text-lg", "mt-4")}>My Lists</h1>
-        <ul className={classNames("ml-2", "mt-2", "text-lg", "tracking-wider")}>
+        <h1 className={classNames("text-lg", "mt-4")}>My Lists</h1>
+        <ul className={classNames("ml-2", "mt-2", "text-lg", "tracking-wide")}>
           {listData.map((item) => (
             <div
               key={item.id}
@@ -98,7 +96,6 @@ export const ListNav: React.FC = () => {
                 "items-center",
                 "mb-2",
                 "justify-between",
-                "text-altwhite",
               )}
             >
               <Link to={item.id} reloadDocument={false}>
@@ -106,9 +103,9 @@ export const ListNav: React.FC = () => {
               </Link>
               <button
                 onClick={() => handleListRemove(item.id)}
-                className={classNames("border", "border-altwhite", "mr-2")}
+                className={classNames("border", "mr-2")}
               >
-                <img src={add} className={classNames("rotate-45", "h-4")} />
+                <img src={add} className={classNames("rotate-45", "h-6")} />
               </button>
             </div>
           ))}

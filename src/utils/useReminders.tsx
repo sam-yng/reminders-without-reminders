@@ -1,4 +1,5 @@
 import { AnyAction, Dispatch } from "@reduxjs/toolkit";
+import { isToday } from "date-fns";
 import React, { createContext, useContext, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -12,6 +13,7 @@ export interface Task {
   complete?: boolean;
   flagged: boolean;
   listId: string | null;
+  date: string;
 }
 
 export interface ListState {
@@ -26,6 +28,7 @@ export interface List {
 export type FormikErrors = {
   listInput?: string;
   taskInput?: string;
+  dateInput?: string;
 };
 
 export type RemindersContextType = {
@@ -33,6 +36,9 @@ export type RemindersContextType = {
   taskData: Task[];
   dispatch: Dispatch<AnyAction>;
   flaggedTasks: Task[];
+  scheduledTasks: Task[];
+  isDateToday: (date: string) => boolean;
+  todayTasks: Task[];
 };
 
 const RemindersContext = createContext<RemindersContextType | undefined>(
@@ -46,6 +52,14 @@ export const RemindersProvider: React.FC<{ children: React.ReactNode }> = ({
   const taskData = useSelector((state: TaskState) => state.tasks);
   const dispatch = useDispatch();
   const flaggedTasks = taskData.filter((item) => item.flagged === true);
+  const scheduledTasks = taskData.filter((item) => item.date.length > 0);
+
+  const isDateToday = (date: string) => {
+    const numbers = date.split("/");
+    const dateObj = new Date(+numbers[2], numbers[1] - 1, +numbers[0]);
+    return isToday(dateObj);
+  };
+  const todayTasks = taskData.filter((item) => isDateToday(item.date));
 
   const value = useMemo(
     () => ({
@@ -53,8 +67,19 @@ export const RemindersProvider: React.FC<{ children: React.ReactNode }> = ({
       taskData,
       dispatch,
       flaggedTasks,
+      scheduledTasks,
+      todayTasks,
+      isDateToday,
     }),
-    [listData, taskData, dispatch, flaggedTasks],
+    [
+      listData,
+      taskData,
+      dispatch,
+      flaggedTasks,
+      scheduledTasks,
+      todayTasks,
+      isDateToday,
+    ],
   );
 
   return (

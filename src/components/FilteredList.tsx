@@ -12,15 +12,20 @@ export const FilteredList: React.FC<FilteredListProps> = ({
   icon,
   name,
 }: FilteredListProps) => {
-  const { flaggedTasks, taskData } = useReminders();
+  const { flaggedTasks, taskData, scheduledTasks, todayTasks } = useReminders();
 
   const taskCount: number | undefined = useMemo(() => {
     if (name === "Flagged") {
       return flaggedTasks.length;
     }
     if (name === "All") {
-      console.log(taskData);
       return taskData.length;
+    }
+    if (name === "Scheduled") {
+      return scheduledTasks.length;
+    }
+    if (name === "Today") {
+      return todayTasks.length;
     }
   }, [taskData]);
 
@@ -31,8 +36,6 @@ export const FilteredList: React.FC<FilteredListProps> = ({
     >
       <button
         className={classNames(
-          "border-gray",
-          "bg-offblack",
           "border",
           "flex-row",
           "flex",
@@ -45,7 +48,7 @@ export const FilteredList: React.FC<FilteredListProps> = ({
         )}
       >
         <div className={classNames("flex", "flex-col")}>
-          <img className={classNames("h-16", "w-16")} src={icon} />
+          <img className={classNames("h-12", "w-12")} src={icon} />
           <h1 className={classNames("text-left", "mt-2")}>{name}</h1>
         </div>
         <h1 className={classNames("text-xl")}>{taskCount}</h1>

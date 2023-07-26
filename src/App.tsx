@@ -8,9 +8,7 @@ import { FilteredListView } from "./components/FilteredListView";
 export const App: React.FC = () => {
   return (
     <Router>
-      <main
-        className={classNames("flex", "flex-row", "bg-black", "text-altwhite")}
-      >
+      <main className={classNames("flex", "flex-row")}>
         <ListNav />
         <Routes>
           <Route path="/" element={<main></main>} />

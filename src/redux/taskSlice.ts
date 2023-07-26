@@ -11,6 +11,7 @@ interface Task {
   complete?: boolean;
   flagged: boolean;
   listId: string | null;
+	date: string
 }
 
 const initialState: Task[] = []
@@ -25,7 +26,8 @@ export const taskSlice = createSlice({
 				name: action.payload.name,
 				complete: false,
 				flagged: false,
-				listId: action.payload.listId
+				listId: action.payload.listId,
+				date: ""
 			}
 			state.push(task)
 		},
@@ -35,9 +37,13 @@ export const taskSlice = createSlice({
 		flagTask: (state, action) => {
 			const index = state.findIndex((task) => task.id === action.payload.id)
 			state[index].flagged = action.payload.flagged
-		}
+		},
+		setTaskDate: (state, action) => {
+			const index = state.findIndex((task) => task.id === action.payload.id)
+			state[index].date = action.payload.date
+		},
 	}
 })
 
-export const { addTask, removeTask, flagTask } = taskSlice.actions
+export const { addTask, removeTask, flagTask, setTaskDate } = taskSlice.actions
 export default taskSlice.reducer
