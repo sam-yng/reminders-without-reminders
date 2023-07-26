@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { ListNav } from "./components/ListNav";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ListView } from "./components/ListView";
+import { FilteredListView } from "./components/FilteredListView";
 
 export const App: React.FC = () => {
   return (
@@ -13,7 +14,11 @@ export const App: React.FC = () => {
         <ListNav />
         <Routes>
           <Route path="/" element={<main></main>} />
-          <Route path=":id" element={<ListView />} />
+          <Route path=":listId" element={<ListView />} />
+          <Route
+            path="/filteredList/:filteredId"
+            element={<FilteredListView />}
+          />
         </Routes>
       </main>
     </Router>

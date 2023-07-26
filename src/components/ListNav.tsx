@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import classNames from "classnames";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
@@ -6,14 +6,15 @@ import { addList, removeList } from "../redux/listSlice";
 import add from "../assets/icons/more.png";
 import { useReminders } from "../utils/useReminders";
 import { FormikErrors } from "../utils/useReminders";
+import { FilteredList } from "./FilteredList";
+import today from "../assets/icons/calendar-two.png";
+import scheduled from "../assets/icons/calendar.png";
+import all from "../assets/icons/boxes.png";
+import flagged from "../assets/icons/red-flag.png";
 
 export const ListNav: React.FC = () => {
   const { dispatch, listData } = useReminders();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    navigate("/");
-  }, []);
 
   const handleListAdd = () => {
     dispatch(addList({ name: formik.values.listInput }));
@@ -53,6 +54,12 @@ export const ListNav: React.FC = () => {
         <h1 className={classNames("text-xl", "font-semibold", "text-neon")}>
           REMINDERS WITHOUT<br></br>REMINDERS
         </h1>
+        <div className={classNames("grid", "grid-cols-2", "mt-4")}>
+          <FilteredList icon={today} name="Today" />
+          <FilteredList icon={scheduled} name="Scheduled" />
+          <FilteredList icon={all} name="All" />
+          <FilteredList icon={flagged} name="Flagged" />
+        </div>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -94,7 +101,7 @@ export const ListNav: React.FC = () => {
                 "text-altwhite",
               )}
             >
-              <Link to={`${item.id}`} reloadDocument={false}>
+              <Link to={item.id} reloadDocument={false}>
                 <li key={item.id}>{item.name}</li>
               </Link>
               <button

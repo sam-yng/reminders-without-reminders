@@ -11,11 +11,11 @@ import check from "../assets/icons/checkmark.png";
 
 export const ListView: React.FC = () => {
   const { dispatch, taskData, listData } = useReminders();
-  const { id } = useParams();
-  const ListItem = listData.find((item) => item.id === id);
+  const { listId } = useParams();
+  const ListItem = listData.find((item) => item.id === listId);
 
   const handleTaskAdd = () => {
-    dispatch(addTask({ name: formik.values.taskInput, listId: id }));
+    dispatch(addTask({ name: formik.values.taskInput, listId: listId }));
   };
 
   const handleTaskRemove = (id: string) => {
@@ -39,7 +39,6 @@ export const ListView: React.FC = () => {
     onSubmit: () => {
       handleTaskAdd();
       formik.values.taskInput = "";
-      console.log(ListItem);
     },
   });
 
@@ -83,7 +82,7 @@ export const ListView: React.FC = () => {
         )}
       >
         {taskData
-          .filter((item) => item.listId === id)
+          .filter((item) => item.listId === listId)
           .map((item) => (
             <div
               className={classNames(

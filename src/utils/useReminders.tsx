@@ -32,6 +32,7 @@ export type RemindersContextType = {
   listData: List[];
   taskData: Task[];
   dispatch: Dispatch<AnyAction>;
+  flaggedTasks: Task[];
 };
 
 const RemindersContext = createContext<RemindersContextType | undefined>(
@@ -44,14 +45,16 @@ export const RemindersProvider: React.FC<{ children: React.ReactNode }> = ({
   const listData = useSelector((state: ListState) => state.lists);
   const taskData = useSelector((state: TaskState) => state.tasks);
   const dispatch = useDispatch();
+  const flaggedTasks = taskData.filter((item) => item.flagged === true);
 
   const value = useMemo(
     () => ({
       listData,
       taskData,
       dispatch,
+      flaggedTasks,
     }),
-    [listData, taskData, dispatch],
+    [listData, taskData, dispatch, flaggedTasks],
   );
 
   return (
